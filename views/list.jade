@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    h1 Device Wall URL list
+    br
+    ul
+        each result in results
+            li= result.url
