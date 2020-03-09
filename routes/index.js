@@ -5,20 +5,26 @@ var currentSite = 0;
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', { websiteSrc: getUrlArray()[0] });
+    getUrlArray().then(results => {
+        console.log('RESULT: ', results);
+        res.render('index', { websiteSrc: results[0] });
+    });
 });
 
 function getUrlArray() {
-  MongoClient.connect('mongodb://localhost:27017/device-wall')
+   return new Promise((resolve, reject) => {
+    MongoClient.connect('mongodb://localhost:27017/device-wall')
     .then(function (db) {
-      var db = client.db('device-wall');
-
-      db.collection('urls').find().toArray(function (err, results) {
-        if (err) throw err
-        return results;
-      });
+        var db = client.db('device-wall');
+        console.log('UITVOERENDE CODE, PAS OP');
+        db.collection('urls').find().toArray(function (err, results) {
+            console.log('RESULT: ', results);
+            if (err) throw err
+            resolve(results);
+        });
     })
-    .catch(function (err) {})
+    .catch(function (err) { })
+   })
 }
 
 module.exports = router;
